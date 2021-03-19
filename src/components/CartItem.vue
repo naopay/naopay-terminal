@@ -1,13 +1,13 @@
 <template>
-  <div class="flex items-center h-16 gap-x-8">
-    <div class="flex font-medium text-xl">
+  <div>
+    <div class="flex font-medium text-2xl">
       <div class="w-14">x{{ item.count }}</div>
       <div class="flex-1 flex justify-between">
         <div>{{ item.name }}</div>
         <div>${{ item.price.toFixed(2) }}</div>
       </div>
     </div>
-    <ul v-if="item.extras.length" class="font-light text-lg text-gray-400">
+    <ul v-if="item.extras.length" class="font-light text-xl text-gray-400">
       <li
         v-for="extra in item.extras"
         :key="extra._id"
