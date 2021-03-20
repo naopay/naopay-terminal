@@ -7,10 +7,10 @@
         <LottieAnimation v-else-if="transactionRejected" path="error_animation.json" :speed="1" :loop="false"/>
       </transition>
     </div>
-    <div class="mt-6 text-3xl">
+    <div class="mt-6 text-3xl select-text">
       {{ nanoAmount }} ⋰⋅⋰
     </div>
-    <div class="mt-2">
+    <div class="mt-2 select-text">
       <span class="text-blue-600">{{ posAddress.substring(0, 11) }}</span>
       <span>{{ posAddress.substring(11, 50) }}</span>
       <span class="text-blue-600">{{ posAddress.substring(50) }}</span>

@@ -12,7 +12,7 @@
       </div>
       <div class="flex justify-between">
         <div>Total in NANO</div>
-        <div>⋰⋅⋰ {{ nanoAmount.toFixed(2) }}</div>
+        <div>⋰⋅⋰ {{ nanoAmount }}</div>
       </div>
     </div>
   </div>
