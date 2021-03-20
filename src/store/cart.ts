@@ -4,6 +4,8 @@ import { Item } from "@/models/item"
 import socketio from 'socket.io-client'
 import { TerminalCart } from "@/models/terminal-cart"
 import { tools } from 'nanocurrency-web'
+import { TransactionStatus } from "@/models/transaction-status"
+import { TransactionNotification } from "@/models/transaction-notification"
 
 @Module
 class CartModule extends VuexModule {
@@ -13,6 +15,20 @@ class CartModule extends VuexModule {
     nanoRawAmount: "0",
     requestPayment: false,
     posAddress: ""
+  }
+
+  transactionStatus: TransactionStatus = TransactionStatus.NONE
+
+  get noTransactionReceived() {
+    return this.transactionStatus === TransactionStatus.NONE
+  }
+
+  get transactionIsAccepted() {
+    return this.transactionStatus === TransactionStatus.ACCEPTED
+  }
+
+  get transactionIsRejected() {
+    return this.transactionStatus === TransactionStatus.REJECTED
   }
 
   get posAddress(): string {
@@ -44,8 +60,24 @@ class CartModule extends VuexModule {
   }
 
   @Mutation
+  setTransactionStatus(transactionStatus: TransactionStatus) {
+    this.transactionStatus = transactionStatus
+  }
+
+  @Mutation
   setCart(cart: TerminalCart) {
     this.cart = cart
+  }
+
+  @Action
+  emptyCart() {
+    this.setCart({
+      items: [],
+      amount: 0,
+      nanoRawAmount: "0",
+      requestPayment: false,
+      posAddress: ""
+    })
   }
 
   @Action
@@ -58,6 +90,20 @@ class CartModule extends VuexModule {
     })
     socket.on('cart', (data: TerminalCart) => {
       this.setCart(data)
+    })
+    socket.on('transaction', (data: TransactionNotification) => {
+      if (data.accepted) {
+        this.setTransactionStatus(TransactionStatus.ACCEPTED)
+        setTimeout(() => {
+          this.emptyCart()
+          this.setTransactionStatus(TransactionStatus.NONE)
+        }, 1000)
+      } else {
+        this.setTransactionStatus(TransactionStatus.REJECTED)
+        setTimeout(() => {
+          this.setTransactionStatus(TransactionStatus.NONE)
+        }, 1000)
+      }
     })
   }
 }
