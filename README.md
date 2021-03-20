@@ -20,7 +20,7 @@ npm run build
 npm run lint
 ```
 
-### Demo
+### Screenshots
 
 ![unknown](https://user-images.githubusercontent.com/24301350/111860233-8fe81600-8946-11eb-9422-05cd5576deb5.png)
 
