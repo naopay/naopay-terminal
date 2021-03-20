@@ -97,12 +97,12 @@ class CartModule extends VuexModule {
         setTimeout(() => {
           this.emptyCart()
           this.setTransactionStatus(TransactionStatus.NONE)
-        }, 1000)
+        }, 2000)
       } else {
         this.setTransactionStatus(TransactionStatus.REJECTED)
         setTimeout(() => {
           this.setTransactionStatus(TransactionStatus.NONE)
-        }, 1000)
+        }, 2000)
       }
     })
   }

@@ -65,6 +65,7 @@ export default class PaymentRequest extends Vue {
 }
 
 .pop-enter, .pop-leave-to {
+  position: absolute;
   transform: scale(0);
   opacity: 0.5;
 }
