@@ -21,7 +21,7 @@
 <script lang="ts">
 import { Item } from '@/models/item'
 import { cartModule } from '@/store/cart'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import CartItem from '@/components/CartItem.vue'
 
 @Component({
@@ -31,16 +31,16 @@ import CartItem from '@/components/CartItem.vue'
 })
 export default class Cart extends Vue {
 
-  get nanoAmount() {
-    return cartModule.nanoAmount
+  get nanoAmount(): number {
+    return cartModule.nanoAmount;
   }
 
   get fiatAmount(): number {
-    return cartModule.fiatAmount
+    return cartModule.fiatAmount;
   }
 
   get items(): Item[] {
-    return cartModule.items
+    return cartModule.items;
   }
 
 }

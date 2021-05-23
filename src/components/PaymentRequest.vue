@@ -2,9 +2,9 @@
   <div class="bg-white p-8 w-80 rounded shadow text-center break-words">
     <div>
       <transition name="pop">
-        <QrcodeVue v-if="noTransactionReceived" :value="uri" :size="250" class="flex justify-center"></QrcodeVue>
-        <LottieAnimation v-else-if="transactionAccepted" path="check_animation.json" :speed="2" :loop="false"/>
-        <LottieAnimation v-else-if="transactionRejected" path="error_animation.json" :speed="1" :loop="false"/>
+        <QrcodeVue v-if="noPaymentReceived" :value="uri" :size="250" class="flex justify-center"></QrcodeVue>
+        <LottieAnimation v-else-if="paymentAccepted" path="check_animation.json" :speed="2" :loop="false"/>
+        <LottieAnimation v-else-if="paymentRejected" path="error_animation.json" :speed="1" :loop="false"/>
       </transition>
     </div>
     <div class="mt-6 text-3xl select-text">
@@ -32,28 +32,28 @@ import { cartModule } from "@/store/cart"
 })
 export default class PaymentRequest extends Vue {
 
-  get noTransactionReceived(): boolean {
-    return cartModule.noTransactionReceived
+  get noPaymentReceived(): boolean {
+    return cartModule.noPaymentReceived;
   }
 
-  get transactionAccepted(): boolean {
-    return cartModule.transactionIsAccepted
+  get paymentAccepted(): boolean {
+    return cartModule.paymentIsAccepted;
   }
 
-  get transactionRejected(): boolean {
-    return cartModule.transactionIsRejected
+  get paymentRejected(): boolean {
+    return cartModule.paymentIsRejected;
   }
 
   get uri(): string {
-    return cartModule.uri
+    return cartModule.uri;
   }
 
   get posAddress(): string {
-    return cartModule.posAddress
+    return cartModule.posAddress;
   }
 
   get nanoAmount(): number {
-    return cartModule.nanoAmount
+    return cartModule.nanoAmount;
   }
 
 }

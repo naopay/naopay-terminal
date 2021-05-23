@@ -27,6 +27,6 @@ import { Item } from "@/models/item"
 @Component
 export default class CartItem extends Vue {
   @Prop()
-  private item!: Item
+  private item!: Item;
 }
 </script>

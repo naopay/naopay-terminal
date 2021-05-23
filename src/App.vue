@@ -21,12 +21,12 @@ import { cartModule } from './store/cart';
 })
 export default class App extends Vue {
 
-  created() {
-    cartModule.registerSocket()
+  created(): void {
+    cartModule.registerSocket();
   }
 
-  get shouldPay() {
-    return cartModule.shouldPay
+  get shouldPay(): boolean {
+    return cartModule.shouldPay;
   }
 
 }

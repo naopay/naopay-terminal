@@ -4,8 +4,8 @@ import { Item } from "@/models/item"
 import socketio from 'socket.io-client'
 import { TerminalCart } from "@/models/terminal-cart"
 import { tools } from 'nanocurrency-web'
-import { TransactionStatus } from "@/models/transaction-status"
-import { TransactionNotification } from "@/models/transaction-notification"
+import { PaymentStatus } from "@/models/payment-status"
+import { PaymentNotification } from "@/models/payment-notification"
 
 @Module
 class CartModule extends VuexModule {
@@ -15,58 +15,58 @@ class CartModule extends VuexModule {
     nanoRawAmount: "0",
     requestPayment: false,
     posAddress: ""
+  };
+
+  paymentStatus: PaymentStatus = PaymentStatus.NONE;
+
+  get noPaymentReceived() {
+    return this.paymentStatus === PaymentStatus.NONE;
   }
 
-  transactionStatus: TransactionStatus = TransactionStatus.NONE
-
-  get noTransactionReceived() {
-    return this.transactionStatus === TransactionStatus.NONE
+  get paymentIsAccepted() {
+    return this.paymentStatus === PaymentStatus.ACCEPTED;
   }
 
-  get transactionIsAccepted() {
-    return this.transactionStatus === TransactionStatus.ACCEPTED
-  }
-
-  get transactionIsRejected() {
-    return this.transactionStatus === TransactionStatus.REJECTED
+  get paymentIsRejected() {
+    return this.paymentStatus === PaymentStatus.REJECTED;
   }
 
   get posAddress(): string {
-    return this.cart.posAddress
+    return this.cart.posAddress;
   }
 
   get uri(): string {
-    return `nano:${this.cart.posAddress}?amount=${this.nanoRawAmount}`
+    return `nano:${this.cart.posAddress}?amount=${this.nanoRawAmount}`;
   }
 
   get shouldPay(): boolean {
-    return this.cart.requestPayment
+    return this.cart.requestPayment;
   }
 
   get fiatAmount(): number {
-    return this.cart.amount
+    return this.cart.amount;
   }
 
   get nanoRawAmount(): string {
-    return this.cart.nanoRawAmount
+    return this.cart.nanoRawAmount;
   }
 
   get nanoAmount(): number {
-    return Number(tools.convert(this.nanoRawAmount, "RAW", "NANO"))
+    return Number(tools.convert(this.nanoRawAmount, "RAW", "NANO"));
   }
 
   get items(): Item[] {
-    return this.cart.items
+    return this.cart.items;
   }
 
   @Mutation
-  setTransactionStatus(transactionStatus: TransactionStatus) {
-    this.transactionStatus = transactionStatus
+  setPaymentStatus(paymentStatus: PaymentStatus) {
+    this.paymentStatus = paymentStatus;
   }
 
   @Mutation
   setCart(cart: TerminalCart) {
-    this.cart = cart
+    this.cart = cart;
   }
 
   @Action
@@ -77,35 +77,35 @@ class CartModule extends VuexModule {
       nanoRawAmount: "0",
       requestPayment: false,
       posAddress: ""
-    })
+    });
   }
 
   @Action
   registerSocket() {
-    const socket = socketio(process.env.VUE_APP_BACKEND_WS)
+    const socket = socketio(process.env.VUE_APP_BACKEND_WS);
     socket.on('connect', () => {
       socket.emit('register', {
         role: 'terminal'
       })
-    })
+    });
     socket.on('cart', (data: TerminalCart) => {
-      this.setCart(data)
-    })
-    socket.on('transaction', (data: TransactionNotification) => {
+      this.setCart(data);
+    });
+    socket.on('payment', (data: PaymentNotification) => {
       if (data.accepted) {
-        this.setTransactionStatus(TransactionStatus.ACCEPTED)
+        this.setPaymentStatus(PaymentStatus.ACCEPTED);
         setTimeout(() => {
           this.emptyCart()
-          this.setTransactionStatus(TransactionStatus.NONE)
-        }, 2000)
+          this.setPaymentStatus(PaymentStatus.NONE)
+        }, 2000);
       } else {
-        this.setTransactionStatus(TransactionStatus.REJECTED)
+        this.setPaymentStatus(PaymentStatus.REJECTED)
         setTimeout(() => {
-          this.setTransactionStatus(TransactionStatus.NONE)
-        }, 2000)
+          this.setPaymentStatus(PaymentStatus.NONE)
+        }, 2000);
       }
-    })
+    });
   }
 }
 
-export const cartModule = new CartModule({ store, name: "cart" })
+export const cartModule = new CartModule({ store, name: "cart" });
